@@ -1,0 +1,29 @@
+{
+  "name": "com.shamanlvlgod.figma-to-unity",
+  "displayName": "Figma to Unity",
+  "description": "Build Unity uGUI prefabs from Figma with one click: an Export to Unity Figma plugin pushes your frames straight into the open Editor, no Figma API token or rate limits. Based on Unity Figma Bridge by Simon Oliver (MIT).",
+  "version": "2.0.0",
+  "unity": "6000.3",
+  "license": "MIT",
+  "author": {
+    "name": "ShamanLvlGod",
+    "url": "https://github.com/ShamanLvlGod"
+  },
+  "keywords": [
+    "figma",
+    "ui",
+    "ugui",
+    "figma-to-unity",
+    "importer"
+  ],
+  "type": "library",
+  "hideInEditor": false,
+  "dependencies": {
+    "com.unity.ugui": "2.0.0",
+    "com.unity.nuget.newtonsoft-json": "3.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ShamanLvlGod/figma-to-unity.git"
+  }
+}

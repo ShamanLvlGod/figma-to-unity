@@ -1,0 +1,1378 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    --bg: var(--figma-color-bg, #ffffff);
+    --bg-secondary: var(--figma-color-bg-secondary, #f5f5f5);
+    --bg-hover: var(--figma-color-bg-hover, #f0f0f0);
+    --text: var(--figma-color-text, #1e1e1e);
+    --text-secondary: var(--figma-color-text-secondary, #6b6b6b);
+    --text-tertiary: var(--figma-color-text-tertiary, #9a9a9a);
+    --border: var(--figma-color-border, #e6e6e6);
+    --brand: var(--figma-color-bg-brand, #0d99ff);
+    --brand-hover: var(--figma-color-bg-brand-hover, #0a84dc);
+    --on-brand: var(--figma-color-text-onbrand, #ffffff);
+    --danger: var(--figma-color-text-danger, #dc3412);
+    --danger-bg: var(--figma-color-bg-danger-tertiary, #fff1ee);
+    --warning: var(--figma-color-text-warning, #b86200);
+    --warning-bg: var(--figma-color-bg-warning-tertiary, #fff6e6);
+    --success: var(--figma-color-text-success, #14ae5c);
+    --info: var(--figma-color-icon-secondary, #8c8c8c);
+  }
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font: 11px/16px Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #app { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 10px; }
+  button { font: inherit; color: inherit; }
+  input, select { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; height: 26px; padding: 0 6px; width: 100%; min-width: 0; }
+  input:focus, select:focus { outline: 1px solid var(--brand); border-color: var(--brand); }
+  input:invalid { border-color: var(--danger); }
+  p { margin: 0; }
+  b { font-weight: 600; }
+  .status-bar { display: flex; align-items: center; gap: 6px; min-height: 20px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--text-tertiary); }
+  .status-dot.ok { background: var(--success); }
+  .status-dot.warning { background: var(--warning); }
+  .status-dot.error { background: var(--danger); }
+  .status-text { flex: 1; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .status-detail { color: var(--text-secondary); margin-top: -6px; }
+  .status-detail.strong { color: var(--danger); font-weight: 600; }
+  .link-button { background: none; border: none; padding: 0; color: var(--brand); cursor: pointer; white-space: nowrap; }
+  .link-button:hover { text-decoration: underline; }
+  .link-button:disabled { color: var(--text-tertiary); cursor: default; text-decoration: none; }
+  .card { border: 1px solid var(--border); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 8px; background: var(--bg-secondary); }
+  .card.warning-card { border-color: var(--warning); background: var(--warning-bg); }
+  .card-title { font-weight: 600; font-size: 12px; }
+  .inline-row { display: flex; gap: 6px; align-items: center; }
+  .inline-row.end { justify-content: flex-end; }
+  .field-label { display: block; color: var(--text-secondary); margin-bottom: 4px; }
+  .field-message { color: var(--danger); }
+  .section { display: flex; flex-direction: column; gap: 6px; }
+  .section-head { display: flex; align-items: center; gap: 8px; }
+  .section-title { font-weight: 600; }
+  .section-meta { color: var(--text-secondary); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .scope-text { color: var(--text-secondary); }
+  .check-list { max-height: 250px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px; }
+  .check-list:empty { display: none; }
+  .check-empty { padding: 8px 10px; color: var(--text-secondary); }
+  .check-empty.good { color: var(--success); }
+  details { border-top: 1px solid var(--border); }
+  details:first-child { border-top: none; }
+  summary { cursor: pointer; padding: 6px 10px; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 6px; user-select: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "\25B8"; color: var(--text-tertiary); width: 8px; }
+  details[open] > summary::before { content: "\25BE"; }
+  .row-item { display: flex; align-items: flex-start; gap: 8px; padding: 5px 10px; cursor: default; }
+  .row-item.clickable { cursor: pointer; }
+  .row-item.clickable:hover { background: var(--bg-hover); }
+  .row-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex: none; background: var(--info); }
+  .row-item.error .row-dot { background: var(--danger); }
+  .row-item.warning .row-dot { background: var(--warning); }
+  .row-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .row-layer { color: var(--text-secondary); }
+  .row-action { visibility: hidden; flex: none; }
+  .row-item:hover .row-action, .row-action:focus { visibility: visible; }
+  .count-error { color: var(--danger); }
+  .count-warning { color: var(--warning); }
+  .hint { color: var(--text-secondary); }
+  .hint.error { color: var(--danger); }
+  .form { display: flex; flex-direction: column; gap: 6px; }
+  .form-row { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 6px; }
+  .form-row > label { color: var(--text-secondary); }
+  .inset-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+  .inset-grid input { padding: 0 4px; text-align: center; }
+  .check-row { display: flex; align-items: center; gap: 6px; padding-left: 102px; color: var(--text); }
+  .check-row input { width: auto; height: auto; margin: 0; }
+  .layer-meta { color: var(--text-secondary); }
+  .layer-meta .tag { display: inline-block; padding: 0 5px; margin-right: 4px; border-radius: 3px; background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text); }
+  .progress-text { color: var(--text); }
+  .progress-track { height: 4px; border-radius: 2px; background: var(--bg-secondary); overflow: hidden; }
+  .progress-fill { height: 100%; width: 0; background: var(--brand); transition: width 0.2s; }
+  .progress-track.indeterminate .progress-fill { width: 30%; animation: slide 1.2s ease-in-out infinite; }
+  @keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+  .plan-text { color: var(--text-secondary); }
+  .result-title { font-weight: 600; font-size: 12px; }
+  .result-title.good { color: var(--success); }
+  .result-title.bad { color: var(--danger); }
+  .result-line { color: var(--text-secondary); }
+  .name-list { margin: 0; padding-left: 16px; max-height: 120px; overflow-y: auto; }
+  .actions { display: flex; flex-direction: column; gap: 6px; }
+  .button { border-radius: 6px; height: 32px; padding: 0 12px; border: 1px solid transparent; cursor: pointer; font-weight: 600; }
+  .button.small { height: 26px; padding: 0 10px; flex: none; }
+  .button.primary { background: var(--brand); color: var(--on-brand); }
+  .button.primary:hover:not(:disabled) { background: var(--brand-hover); }
+  .button.secondary { background: var(--bg); border-color: var(--border); color: var(--text); }
+  .button.secondary:hover:not(:disabled) { background: var(--bg-hover); }
+  .button:disabled { opacity: 0.45; cursor: default; }
+  .ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="status-bar">
+    <span id="statusDot" class="status-dot"></span>
+    <span id="statusText" class="status-text">Looking for Unity&hellip;</span>
+    <button id="retryButton" class="link-button" hidden>Try again</button>
+  </div>
+  <div id="statusDetail" class="status-detail" hidden></div>
+  <div id="projectRow" class="section" hidden>
+    <label class="field-label" for="projectSelect">Unity project</label>
+    <select id="projectSelect"></select>
+  </div>
+
+  <div id="pairingCard" class="card" hidden>
+    <div class="card-title">Pair with Unity</div>
+    <p>In Unity, use the menu <b>Tools &gt; Figma Bridge &gt; Pair Figma Plugin</b>, copy the code it shows and paste it here. You only need to do this once.</p>
+    <div class="inline-row">
+      <input id="pairingInput" type="text" placeholder="Pairing code" autocomplete="off" spellcheck="false">
+      <button id="pairButton" class="button primary small">Pair</button>
+    </div>
+    <p id="pairingMessage" class="field-message" hidden></p>
+  </div>
+
+  <div class="section">
+    <div>
+      <label class="field-label" for="pageSelect">Page to export</label>
+      <select id="pageSelect"></select>
+    </div>
+    <div id="scopeText" class="scope-text"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <span class="section-title">Checks</span>
+      <span id="checkSummary" class="section-meta"></span>
+      <button id="recheckButton" class="link-button">Check again</button>
+    </div>
+    <div id="checkList" class="check-list"></div>
+  </div>
+
+  <div id="layerSection" class="section" hidden>
+    <div class="section-head">
+      <span class="section-title">Layer</span>
+      <span id="layerName" class="section-meta"></span>
+    </div>
+    <div id="layerHint" class="hint" hidden></div>
+    <div class="form">
+      <div class="form-row">
+        <label for="roleSelect">Role in Unity</label>
+        <select id="roleSelect"></select>
+      </div>
+      <div class="form-row">
+        <label for="bindingInput">Binding name</label>
+        <input id="bindingInput" type="text" spellcheck="false" autocomplete="off">
+      </div>
+      <div id="localizationRow" class="form-row">
+        <label for="localizationInput">Localization key</label>
+        <input id="localizationInput" type="text" spellcheck="false" autocomplete="off" placeholder="None">
+      </div>
+      <div class="form-row">
+        <label for="insetLeft">Nine-slice</label>
+        <div class="inset-grid">
+          <input id="insetLeft" type="number" min="0" step="1" placeholder="Left" title="Left inset in Figma pixels">
+          <input id="insetTop" type="number" min="0" step="1" placeholder="Top" title="Top inset in Figma pixels">
+          <input id="insetRight" type="number" min="0" step="1" placeholder="Right" title="Right inset in Figma pixels">
+          <input id="insetBottom" type="number" min="0" step="1" placeholder="Bottom" title="Bottom inset in Figma pixels">
+        </div>
+      </div>
+      <label id="autoSizeRow" class="check-row"><input id="autoSizeInput" type="checkbox"> Shrink text to fit its box</label>
+      <div id="layerTags" class="layer-meta"></div>
+      <div id="layerPicture" class="layer-meta" hidden></div>
+      <div id="layerSaveState" class="layer-meta" hidden></div>
+    </div>
+  </div>
+  <div id="selectionHint" class="hint" hidden></div>
+
+  <div id="confirmCard" class="card warning-card" hidden>
+    <div class="card-title">Remove these screens from Unity?</div>
+    <p>They are no longer on this page, so Unity will delete them.</p>
+    <ul id="deletionList" class="name-list"></ul>
+    <div class="inline-row end">
+      <button id="cancelRemoveButton" class="button secondary small">Cancel</button>
+      <button id="continueRemoveButton" class="button primary small">Continue</button>
+    </div>
+  </div>
+
+  <div id="progressSection" class="section" hidden>
+    <div id="progressText" class="progress-text"></div>
+    <div id="progressTrack" class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+    <div id="planText" class="plan-text" hidden></div>
+  </div>
+
+  <div id="resultSection" class="section" hidden>
+    <div id="resultTitle" class="result-title"></div>
+    <div id="resultBody" class="section"></div>
+  </div>
+
+  <div class="actions">
+    <button id="exportButton" class="button primary" disabled>Export to Unity</button>
+    <button id="bundleButton" class="button secondary" disabled>Save export file</button>
+    <div id="actionHint" class="hint"></div>
+  </div>
+</div>
+<script>
+  const BRIDGE_PORTS = [37264, 37265, 37266];
+  const DISCOVERY_TIMEOUT = 1500;
+  const PROTOCOL_VERSION = 2;
+  const TIMEOUTS = { ping: 4000, document: 180000, upload: 120000, commit: 900000 };
+  const RETRY_OFFLINE_MS = 6000;
+  const RETRY_BUSY_MS = 3000;
+  const UPDATE_PLUGIN_MESSAGE = 'Update the plugin: pull the latest project and reopen the plugin';
+  const PAIR_MENU_TEXT = 'Tools > Figma Bridge > Pair Figma Plugin';
+  const IMPORT_MENU_TEXT = 'Tools > Figma Bridge > Import Export File';
+  const ROLE_OPTIONS = [
+    ['auto', 'Auto'],
+    ['button', 'Button'],
+    ['toggle', 'Toggle'],
+    ['toggleGroup', 'Toggle group'],
+    ['slider', 'Slider'],
+    ['inputField', 'Text input'],
+    ['scrollView', 'Scroll area'],
+    ['image', 'Picture (flatten)'],
+    ['ignore', 'Leave out of Unity'],
+  ];
+  const ROLE_LABELS = Object.fromEntries(ROLE_OPTIONS);
+  const SEVERITY_GROUPS = [['error', 'Errors'], ['warning', 'Warnings'], ['info', 'Info']];
+
+  const ui = {};
+  for (const id of [
+    'statusDot', 'statusText', 'retryButton', 'statusDetail', 'projectRow', 'projectSelect', 'pairingCard', 'pairingInput', 'pairButton', 'pairingMessage',
+    'pageSelect', 'scopeText', 'checkSummary', 'recheckButton', 'checkList', 'layerSection', 'layerName', 'layerHint',
+    'roleSelect', 'bindingInput', 'localizationRow', 'localizationInput', 'insetLeft', 'insetTop', 'insetRight', 'insetBottom',
+    'autoSizeRow', 'autoSizeInput', 'layerTags', 'layerPicture', 'layerSaveState', 'selectionHint', 'confirmCard',
+    'deletionList', 'cancelRemoveButton', 'continueRemoveButton', 'progressSection', 'progressText', 'progressTrack',
+    'progressFill', 'planText', 'resultSection', 'resultTitle', 'resultBody', 'exportButton', 'bundleButton', 'actionHint',
+  ]) ui[id] = document.getElementById(id);
+
+  const state = {
+    pluginVersion: null,
+    connection: 'checking',
+    connectionNote: '',
+    connecting: null,
+    retryTimer: null,
+    project: null,
+    port: null,
+    savedPort: undefined,
+    projects: [],
+    pairingProject: null,
+    pairingCode: null,
+    unity: null,
+    pages: [],
+    currentPageId: null,
+    exportPageId: null,
+    userPickedPage: false,
+    scope: null,
+    preflight: null,
+    preflightError: '',
+    preflightSeq: 0,
+    preflightTimer: null,
+    preflightDeferred: false,
+    checking: false,
+    openGroups: { error: true, warning: true, info: false, ignored: false },
+    selectionCount: 0,
+    layer: null,
+    pendingSave: null,
+    saveTimer: null,
+    busy: false,
+    progressTimer: null,
+    lastHeight: 0,
+  };
+
+  class BridgeError extends Error {
+    constructor(kind, message, status, body) {
+      super(message);
+      this.kind = kind;
+      this.status = status || 0;
+      this.body = body || {};
+    }
+  }
+
+  let nextRequestId = 1;
+  const pendingRequests = new Map();
+
+  function callPlugin(method, params) {
+    return new Promise((resolve, reject) => {
+      const requestId = nextRequestId++;
+      pendingRequests.set(requestId, { resolve, reject });
+      parent.postMessage({ pluginMessage: { type: 'request', requestId, method, params: params || {} } }, '*');
+    });
+  }
+
+  function notify(message, isError) {
+    callPlugin('notify', { message, error: !!isError }).catch(() => {});
+  }
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.textContent = text;
+    return node;
+  }
+
+  function plural(count, singular, pluralForm) {
+    return count + ' ' + (count === 1 ? singular : (pluralForm || singular + 's'));
+  }
+
+  function parseVersion(text) {
+    return String(text || '').trim().replace(/^v/i, '').split(/[-+]/)[0].split('.').map(part => parseInt(part, 10) || 0);
+  }
+
+  function compareVersions(left, right) {
+    const a = parseVersion(left);
+    const b = parseVersion(right);
+    const length = Math.max(a.length, b.length);
+    for (let index = 0; index < length; index++) {
+      const difference = (a[index] || 0) - (b[index] || 0);
+      if (difference !== 0) return difference < 0 ? -1 : 1;
+    }
+    return 0;
+  }
+
+  function isOlderVersion(current, minimum) {
+    if (!minimum) return false;
+    return compareVersions(current, minimum) < 0;
+  }
+
+  function bytesToBase64(bytes) {
+    let binary = '';
+    const chunkSize = 0x8000;
+    for (let index = 0; index < bytes.length; index += chunkSize) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(index, index + chunkSize));
+    }
+    return btoa(binary);
+  }
+
+  function bundleFileName(pageName) {
+    const safe = String(pageName || '').replace(/[\\/:*?"<>|\u0000-\u001f]+/g, '-').trim() || 'Export';
+    return safe + '.figmabundle.json';
+  }
+
+  function pairingKey() {
+    return 'pairing:' + state.project;
+  }
+
+  function describeDuration(milliseconds) {
+    const seconds = Math.round(milliseconds / 1000);
+    return seconds >= 60 ? Math.round(seconds / 60) + ' minutes' : seconds + ' seconds';
+  }
+
+  async function bridgeRequest(path, options) {
+    const settings = options || {};
+    const timeout = settings.timeout || TIMEOUTS.ping;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    const headers = {
+      'X-Figma-Bridge': String(PROTOCOL_VERSION),
+      'X-Figma-Bridge-Plugin-Version': state.pluginVersion || '0.0.0',
+    };
+    if (state.pairingCode && !settings.noToken) headers['X-Figma-Bridge-Token'] = state.pairingCode;
+    if (settings.contentType) headers['Content-Type'] = settings.contentType;
+    let response;
+    let text;
+    try {
+      response = await fetch((settings.baseUrl || ('http://localhost:' + (state.port || BRIDGE_PORTS[0]))) + path, {
+        method: settings.method || 'GET',
+        headers,
+        body: settings.body,
+        signal: controller.signal,
+      });
+      text = await response.text();
+    } catch (error) {
+      if (controller.signal.aborted) {
+        throw new BridgeError('timeout', 'Unity didn\'t answer within ' + describeDuration(timeout) + '.');
+      }
+      throw new BridgeError('unreachable', 'Unity isn\'t reachable.');
+    } finally {
+      clearTimeout(timer);
+    }
+    let body = {};
+    if (text) {
+      try {
+        body = JSON.parse(text);
+      } catch (error) {
+        body = { error: text.slice(0, 300) };
+      }
+    }
+    if (response.status === 401) {
+      throw new BridgeError('pairing', body.error || 'Unity asked to pair again.', 401, body);
+    }
+    if (!response.ok && !settings.keepErrorBody) {
+      throw new BridgeError('http', body.error || ('Unity answered with error ' + response.status + '.'), response.status, body);
+    }
+    return { status: response.status, ok: response.ok, body };
+  }
+
+  async function ping() {
+    return (await bridgeRequest('/ping', { timeout: TIMEOUTS.ping })).body;
+  }
+
+  async function discoverProjects() {
+    const found = await Promise.all(BRIDGE_PORTS.map(async port => {
+      try {
+        const answer = await bridgeRequest('/ping', { timeout: DISCOVERY_TIMEOUT, baseUrl: 'http://localhost:' + port, noToken: true });
+        return { port, project: (answer.body && answer.body.project) || 'Unity project' };
+      } catch (error) {
+        return null;
+      }
+    }));
+    return found.filter(Boolean);
+  }
+
+  function renderProjectPicker() {
+    const lost = !!state.port && !state.projects.some(entry => entry.port === state.port);
+    const show = state.projects.length > 1 || (lost && state.projects.length > 0);
+    ui.projectRow.hidden = !show;
+    if (!show) return;
+    ui.projectSelect.textContent = '';
+    for (const entry of state.projects) {
+      const option = document.createElement('option');
+      option.value = String(entry.port);
+      option.textContent = entry.project + ' (port ' + entry.port + ')';
+      option.selected = entry.port === state.port;
+      ui.projectSelect.appendChild(option);
+    }
+    if (lost) {
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Choose a Unity project';
+      placeholder.selected = true;
+      ui.projectSelect.insertBefore(placeholder, ui.projectSelect.firstChild);
+    }
+  }
+
+  async function choosePort() {
+    if (state.savedPort === undefined) {
+      const stored = await callPlugin('storageGet', { key: 'bridgePort' }).catch(() => null);
+      state.savedPort = Number(stored) || null;
+    }
+    state.projects = await discoverProjects();
+    if (state.projects.length === 0) {
+      renderProjectPicker();
+      return false;
+    }
+    if (state.port && !state.projects.some(entry => entry.port === state.port)) {
+      renderProjectPicker();
+      return false;
+    }
+    const chosen = state.projects.find(entry => entry.port === state.port)
+      || state.projects.find(entry => entry.port === state.savedPort)
+      || state.projects[0];
+    state.port = chosen.port;
+    renderProjectPicker();
+    return true;
+  }
+
+  function scheduleRetry(delay) {
+    clearTimeout(state.retryTimer);
+    state.retryTimer = setTimeout(() => {
+      if (!state.busy) connect();
+    }, delay);
+  }
+
+  function setConnection(connection, note) {
+    state.connection = connection;
+    state.connectionNote = note || '';
+    renderConnection();
+    updateActions();
+  }
+
+  function connect() {
+    if (!state.connecting) {
+      state.connecting = connectOnce().finally(() => {
+        state.connecting = null;
+      });
+    }
+    return state.connecting;
+  }
+
+  async function connectOnce() {
+    clearTimeout(state.retryTimer);
+    let info;
+    try {
+      if (!(await choosePort())) throw new Error('No Unity project found');
+      info = await ping();
+      state.project = info.project || 'Unity project';
+      if (state.pairingProject !== state.project) {
+        state.pairingProject = state.project;
+        const storedCode = await callPlugin('storageGet', { key: pairingKey() });
+        const nextCode = typeof storedCode === 'string' && storedCode ? storedCode : null;
+        if (nextCode !== state.pairingCode) {
+          state.pairingCode = nextCode;
+          if (nextCode) info = await ping();
+        }
+      }
+    } catch (error) {
+      setConnection('offline');
+      scheduleRetry(RETRY_OFFLINE_MS);
+      return false;
+    }
+    state.unity = info;
+    if (!(Number(info.protocol) >= PROTOCOL_VERSION)) {
+      setConnection('unityOutdated');
+      return false;
+    }
+    if (isOlderVersion(state.pluginVersion, info.minPluginVersion)) {
+      setConnection('pluginOutdated');
+      return false;
+    }
+    if (!info.paired) {
+      setConnection('pairing', state.pairingCode ? 'Unity asked to pair again. Copy a fresh code from ' + PAIR_MENU_TEXT + '.' : '');
+      return false;
+    }
+    await sendUnityInfo(info);
+    if (info.importing) {
+      setConnection('busyImporting');
+      scheduleRetry(RETRY_BUSY_MS);
+      return false;
+    }
+    setConnection('ready');
+    return true;
+  }
+
+  async function sendUnityInfo(info) {
+    const next = JSON.stringify({ fonts: info.fonts || null, googleFonts: !!info.googleFonts, designResolution: info.designResolution || null });
+    if (next === state.sentUnityInfo) return;
+    state.sentUnityInfo = next;
+    await callPlugin('setUnityInfo', JSON.parse(next));
+    schedulePreflight(0);
+  }
+
+  function returnToPairing(message) {
+    setConnection('pairing', message || ('Unity asked to pair again. Copy a fresh code from ' + PAIR_MENU_TEXT + '.'));
+    ui.pairingInput.focus();
+  }
+
+  async function submitPairingCode() {
+    const code = ui.pairingInput.value.trim();
+    if (!code || !state.project) return;
+    ui.pairButton.disabled = true;
+    try {
+      state.pairingCode = code;
+      state.pairingProject = state.project;
+      await callPlugin('storageSet', { key: pairingKey(), value: code });
+      const connected = await connect();
+      if (connected) {
+        ui.pairingInput.value = '';
+        notify('Paired with ' + state.project);
+      } else if (state.connection === 'pairing') {
+        setConnection('pairing', 'Unity didn\'t accept that code. Copy it again from ' + PAIR_MENU_TEXT + '.');
+      }
+    } finally {
+      ui.pairButton.disabled = false;
+    }
+  }
+
+  function renderConnection() {
+    const project = state.project ? '"' + state.project + '"' : 'Unity';
+    const views = {
+      checking: ['Looking for Unity…', '', ''],
+      offline: ['Unity isn\'t reachable', 'error', 'Open the project in Unity and leave it running, then click Try again. No Unity right now? Save an export file and import it later in Unity with ' + IMPORT_MENU_TEXT + '.'],
+      pairing: ['Pair with ' + project + ' to export', 'warning', ''],
+      pluginOutdated: ['This plugin is too old for ' + project, 'error', UPDATE_PLUGIN_MESSAGE],
+      unityOutdated: ['Unity needs a newer Figma Bridge', 'error', 'The Figma Bridge in ' + project + ' is older than this plugin. Pull the latest project, let Unity reload, then click Try again.'],
+      busyImporting: ['Unity is busy importing', 'warning', project + ' is still building the last export. This updates by itself.'],
+      ready: ['Connected to Unity project ' + project, 'ok', ''],
+    };
+    const view = views[state.connection] || views.checking;
+    ui.statusText.textContent = view[0];
+    ui.statusText.title = view[0];
+    ui.statusDot.className = 'status-dot' + (view[1] ? ' ' + view[1] : '');
+    ui.statusDetail.textContent = view[2];
+    ui.statusDetail.hidden = !view[2];
+    ui.statusDetail.className = 'status-detail' + (state.connection === 'pluginOutdated' ? ' strong' : '');
+    ui.retryButton.hidden = ['offline', 'unityOutdated', 'busyImporting'].indexOf(state.connection) < 0;
+    ui.pairingCard.hidden = state.connection !== 'pairing';
+    ui.pairingMessage.textContent = state.connection === 'pairing' ? state.connectionNote : '';
+    ui.pairingMessage.hidden = !ui.pairingMessage.textContent;
+  }
+
+  function applyPages(pages, currentPageId, byPlugin) {
+    state.pages = pages;
+    state.currentPageId = currentPageId;
+    ui.pageSelect.replaceChildren(...pages.map(page => {
+      const option = element('option', '', page.name);
+      option.value = page.id;
+      return option;
+    }));
+    let target = state.exportPageId;
+    const targetExists = pages.some(page => page.id === target);
+    if (!targetExists) {
+      target = currentPageId;
+      state.userPickedPage = false;
+    } else if (!state.userPickedPage && !byPlugin) {
+      target = currentPageId;
+    }
+    ui.pageSelect.value = target;
+    if (target !== state.exportPageId) changeExportPage(target);
+  }
+
+  async function changeExportPage(pageId) {
+    state.exportPageId = pageId;
+    ui.pageSelect.value = pageId;
+    try {
+      applyScope(await callPlugin('setExportPage', { pageId }));
+    } catch (error) {
+      ui.scopeText.textContent = error.message;
+    }
+    schedulePreflight(0);
+  }
+
+  function applyScope(scope) {
+    if (!scope) return;
+    state.scope = scope;
+    if (scope.pageId !== state.exportPageId) {
+      state.exportPageId = scope.pageId;
+      ui.pageSelect.value = scope.pageId;
+    }
+    renderScope();
+    updateActions();
+  }
+
+  function renderScope() {
+    const scope = state.scope;
+    if (!scope) {
+      ui.scopeText.textContent = '';
+      return;
+    }
+    const names = scope.screens.map(screen => screen.name);
+    const shown = names.slice(0, 5).join(', ') + (names.length > 5 ? ' and ' + (names.length - 5) + ' more' : '');
+    let text;
+    if (names.length === 0) text = 'No top-level frames to export on this page.';
+    else if (scope.partialExport) text = 'Exporting the selected ' + plural(names.length, 'frame') + ': ' + shown + '. Clear the selection to export the whole page.';
+    else text = 'Exporting all ' + plural(names.length, 'frame') + ': ' + shown + '.';
+    if (scope.ignoredScreens && scope.ignoredScreens.length > 0) {
+      text += ' Left out (ignored): ' + scope.ignoredScreens.join(', ') + '.';
+    }
+    ui.scopeText.textContent = text;
+  }
+
+  function schedulePreflight(delay) {
+    if (state.busy) {
+      state.preflightDeferred = true;
+      return;
+    }
+    clearTimeout(state.preflightTimer);
+    state.preflightTimer = setTimeout(runPreflight, delay === undefined ? 400 : delay);
+  }
+
+  async function runPreflight() {
+    const sequence = ++state.preflightSeq;
+    state.checking = true;
+    renderCheckSummary();
+    try {
+      const result = await callPlugin('preflight');
+      if (sequence !== state.preflightSeq) return;
+      state.preflightError = '';
+      applyPreflight(result, false);
+    } catch (error) {
+      if (sequence !== state.preflightSeq) return;
+      state.preflightError = 'The check failed: ' + error.message;
+      renderChecks();
+    } finally {
+      if (sequence === state.preflightSeq) {
+        state.checking = false;
+        renderCheckSummary();
+        updateActions();
+      }
+    }
+  }
+
+  function applyPreflight(result, invalidateRunning) {
+    if (invalidateRunning) {
+      state.preflightSeq++;
+      state.checking = false;
+    }
+    state.preflight = result;
+    if (result && result.scope) applyScope(result.scope);
+    renderChecks();
+    updateActions();
+  }
+
+  function renderCheckSummary() {
+    const preflight = state.preflight;
+    ui.checkSummary.replaceChildren();
+    if (state.checking && !preflight) {
+      ui.checkSummary.textContent = 'Checking…';
+      return;
+    }
+    if (!preflight) return;
+    const parts = [];
+    if (preflight.counts.errors) parts.push(['count-error', plural(preflight.counts.errors, 'error')]);
+    if (preflight.counts.warnings) parts.push(['count-warning', plural(preflight.counts.warnings, 'warning')]);
+    if (preflight.counts.info) parts.push(['', preflight.counts.info + ' info']);
+    if (parts.length === 0) parts.push(['', 'All clear']);
+    parts.forEach((part, index) => {
+      if (index > 0) ui.checkSummary.append(' · ');
+      ui.checkSummary.append(element('span', part[0], part[1]));
+    });
+    if (state.checking) ui.checkSummary.append(' · checking…');
+  }
+
+  function selectLayers(nodeIds) {
+    if (!nodeIds || nodeIds.length === 0) return;
+    callPlugin('selectNodes', { nodeIds }).catch(error => notify(error.message, true));
+  }
+
+  async function setIgnored(row, ignored) {
+    try {
+      await callPlugin('setIgnoredCheck', { nodeIds: row.nodeIds, check: row.check, ignored });
+    } catch (error) {
+      notify(error.message, true);
+    }
+    schedulePreflight(0);
+  }
+
+  function makeRowElement(severity, message, nodeIds, action) {
+    const row = element('div', 'row-item ' + severity + (nodeIds && nodeIds.length ? ' clickable' : ''));
+    row.append(element('span', 'row-dot'));
+    const text = element('span', 'row-text', message);
+    row.append(text);
+    if (nodeIds && nodeIds.length) {
+      row.title = 'Select ' + (nodeIds.length === 1 ? 'this layer' : 'these layers') + ' in Figma';
+      row.addEventListener('click', () => selectLayers(nodeIds));
+    }
+    if (action) {
+      const button = element('button', 'link-button row-action', action.label);
+      button.addEventListener('click', event => {
+        event.stopPropagation();
+        action.run();
+      });
+      row.append(button);
+    }
+    return row;
+  }
+
+  function makeGroup(key, title, rows, buildRow) {
+    const details = element('details');
+    details.open = !!state.openGroups[key];
+    details.addEventListener('toggle', () => {
+      state.openGroups[key] = details.open;
+    });
+    details.append(element('summary', '', title + ' (' + rows.length + ')'));
+    for (const row of rows) details.append(buildRow(row));
+    return details;
+  }
+
+  function renderChecks() {
+    renderCheckSummary();
+    const list = ui.checkList;
+    const scrollTop = list.scrollTop;
+    list.replaceChildren();
+    const preflight = state.preflight;
+    if (state.preflightError) {
+      list.append(element('div', 'check-empty', state.preflightError));
+      return;
+    }
+    if (!preflight) {
+      list.append(element('div', 'check-empty', 'Checking the design…'));
+      return;
+    }
+    if (preflight.rows.length === 0) {
+      list.append(element('div', 'check-empty good', 'No problems found.'));
+    }
+    for (const group of SEVERITY_GROUPS) {
+      const rows = preflight.rows.filter(row => row.severity === group[0]);
+      if (rows.length === 0) continue;
+      list.append(makeGroup(group[0], group[1], rows, row => makeRowElement(row.severity, row.message, row.nodeIds,
+        row.canIgnore ? { label: 'Ignore', run: () => setIgnored(row, true) } : null)));
+    }
+    if (preflight.ignoredRows.length > 0) {
+      list.append(makeGroup('ignored', 'Ignored', preflight.ignoredRows, row => makeRowElement(row.severity, row.message, row.nodeIds,
+        { label: 'Show again', run: () => setIgnored(row, false) })));
+    }
+    list.scrollTop = scrollTop;
+  }
+
+  function updateActions() {
+    const preflight = state.preflight;
+    const hasScreens = !!(state.scope && state.scope.screens.length > 0);
+    const hasErrors = !!(preflight && preflight.counts.errors > 0);
+    const ready = state.connection === 'ready';
+    ui.exportButton.disabled = state.busy || !ready || !hasScreens || hasErrors || !preflight;
+    ui.bundleButton.disabled = state.busy || !hasScreens || hasErrors || !preflight || state.connection === 'pluginOutdated';
+    const offline = state.connection === 'offline';
+    ui.bundleButton.classList.toggle('primary', offline);
+    ui.bundleButton.classList.toggle('secondary', !offline);
+    let hint = '';
+    if (!state.busy) {
+      if (!preflight) hint = 'Checking the design…';
+      else if (!hasScreens) hint = 'This page has no top-level frames to export.';
+      else if (hasErrors) hint = 'Fix the errors in the list to export.';
+      else if (state.connection === 'offline') hint = 'Unity isn\'t reachable. You can still save an export file.';
+      else if (state.connection === 'pairing') hint = 'Pair with Unity to export.';
+      else if (state.connection === 'pluginOutdated') hint = UPDATE_PLUGIN_MESSAGE;
+      else if (state.connection === 'unityOutdated') hint = 'Update the project in Unity to export.';
+      else if (state.connection === 'busyImporting') hint = 'Waiting for Unity to finish importing.';
+      else if (state.connection === 'checking') hint = 'Looking for Unity…';
+    }
+    ui.actionHint.textContent = hint;
+    ui.actionHint.hidden = !hint;
+  }
+
+  function applySelection(message) {
+    if (state.pendingSave && (!message.layer || message.layer.id !== state.pendingSave.nodeId)) flushSettingsSave();
+    const previousId = state.layer ? state.layer.id : null;
+    state.selectionCount = message.count;
+    state.layer = message.layer;
+    renderLayer(previousId !== (message.layer ? message.layer.id : null));
+  }
+
+  function applyLayerInfo(layer) {
+    if (!layer || !state.layer || layer.id !== state.layer.id) return;
+    state.layer = layer;
+    renderLayer(false);
+  }
+
+  function renderLayer(resetForm) {
+    const layer = state.layer;
+    ui.layerSection.hidden = !layer;
+    ui.selectionHint.hidden = !!layer || state.selectionCount <= 1;
+    ui.selectionHint.textContent = state.selectionCount + ' layers selected. Select one layer to edit its Unity settings.';
+    if (!layer) return;
+    ui.layerName.textContent = layer.name;
+    ui.layerName.title = layer.name;
+    ui.localizationRow.hidden = !layer.isText;
+    ui.autoSizeRow.hidden = !layer.isText;
+    ui.bindingInput.placeholder = layer.cleanName;
+    if (resetForm) {
+      const settings = layer.settings;
+      const insets = settings.nineSlice || {};
+      ui.roleSelect.value = settings.role;
+      ui.bindingInput.value = settings.bindingName;
+      ui.localizationInput.value = settings.localizationKey;
+      ui.insetLeft.value = insets.left === undefined ? '' : insets.left;
+      ui.insetTop.value = insets.top === undefined ? '' : insets.top;
+      ui.insetRight.value = insets.right === undefined ? '' : insets.right;
+      ui.insetBottom.value = insets.bottom === undefined ? '' : insets.bottom;
+      ui.autoSizeInput.checked = settings.textAutoSize;
+      ui.layerSaveState.hidden = true;
+    }
+    renderLayerMeta();
+  }
+
+  function renderLayerMeta() {
+    const layer = state.layer;
+    ui.layerTags.replaceChildren();
+    if (layer.tags.length > 0) {
+      ui.layerTags.append('Name tags: ');
+      for (const tag of layer.tags) ui.layerTags.append(element('span', 'tag', tag));
+      const panelRole = ui.roleSelect.value;
+      if (panelRole === 'auto' && layer.tagRole !== 'auto') {
+        ui.layerTags.append('With role Auto, Unity uses the tag: ' + ROLE_LABELS[layer.tagRole] + '.');
+      } else if (panelRole !== 'auto' && layer.tagRole !== 'auto' && panelRole !== layer.tagRole) {
+        ui.layerTags.append('The role above wins over the tag.');
+      }
+    } else {
+      ui.layerTags.textContent = 'No name tags. Tags like [button] or [ignore] in the layer name work too.';
+    }
+    const hints = [];
+    if (layer.insideInstance) hints.push('This layer is inside an instance. Unity builds instances from their main component, so set this on the main component to change every copy.');
+    ui.layerHint.textContent = hints.join(' ');
+    ui.layerHint.hidden = hints.length === 0;
+    const picture = layer.picture;
+    if (picture && picture.kind === 'self') ui.layerPicture.textContent = 'Becomes a picture in Unity: ' + picture.reason + '.';
+    else if (picture && picture.kind === 'inside') ui.layerPicture.textContent = 'Part of the picture "' + picture.name + '" in Unity.';
+    else ui.layerPicture.textContent = '';
+    ui.layerPicture.hidden = !ui.layerPicture.textContent;
+  }
+
+  function readLayerForm() {
+    return {
+      role: ui.roleSelect.value,
+      bindingName: ui.bindingInput.value,
+      localizationKey: ui.localizationInput.value,
+      nineSlice: {
+        left: ui.insetLeft.value,
+        top: ui.insetTop.value,
+        right: ui.insetRight.value,
+        bottom: ui.insetBottom.value,
+      },
+      textAutoSize: ui.autoSizeInput.checked,
+    };
+  }
+
+  function queueSettingsSave(delay) {
+    if (!state.layer) return;
+    state.pendingSave = { nodeId: state.layer.id, settings: readLayerForm() };
+    clearTimeout(state.saveTimer);
+    state.saveTimer = setTimeout(flushSettingsSave, delay);
+  }
+
+  function setSaveState(text, isError) {
+    ui.layerSaveState.textContent = text;
+    ui.layerSaveState.className = 'layer-meta' + (isError ? ' hint error' : '');
+    ui.layerSaveState.hidden = !text;
+  }
+
+  async function flushSettingsSave() {
+    clearTimeout(state.saveTimer);
+    const save = state.pendingSave;
+    state.pendingSave = null;
+    if (!save) return;
+    try {
+      const layer = await callPlugin('saveSettings', save);
+      if (state.layer && state.layer.id === layer.id) {
+        state.layer = Object.assign({}, state.layer, { tags: layer.tags, tagRole: layer.tagRole, name: layer.name, cleanName: layer.cleanName });
+        renderLayerMeta();
+        setSaveState('Saved in this Figma file.', false);
+      }
+      schedulePreflight(300);
+    } catch (error) {
+      if (state.layer && state.layer.id === save.nodeId) setSaveState('Couldn\'t save: ' + error.message, true);
+      else notify('Couldn\'t save the layer settings: ' + error.message, true);
+    }
+  }
+
+  function setBusy(busy) {
+    state.busy = busy;
+    if (!busy && state.preflightDeferred) {
+      state.preflightDeferred = false;
+      schedulePreflight(0);
+    }
+    updateActions();
+  }
+
+  function stopProgressTimer() {
+    clearInterval(state.progressTimer);
+    state.progressTimer = null;
+  }
+
+  function setProgress(text, fraction) {
+    ui.progressSection.hidden = false;
+    ui.progressText.textContent = text;
+    const indeterminate = fraction === undefined || fraction === null;
+    ui.progressTrack.classList.toggle('indeterminate', indeterminate);
+    ui.progressFill.style.width = indeterminate ? '' : Math.round(Math.max(0, Math.min(1, fraction)) * 100) + '%';
+  }
+
+  function startTimedProgress(text) {
+    stopProgressTimer();
+    const started = Date.now();
+    const update = () => {
+      const seconds = Math.floor((Date.now() - started) / 1000);
+      setProgress(text + ' ' + Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0'));
+    };
+    update();
+    state.progressTimer = setInterval(update, 1000);
+  }
+
+  function hideProgress() {
+    stopProgressTimer();
+    ui.progressSection.hidden = true;
+    ui.planText.hidden = true;
+  }
+
+  function clearResult() {
+    ui.resultSection.hidden = true;
+    ui.resultBody.replaceChildren();
+    ui.planText.hidden = true;
+  }
+
+  function normalizePlan(plan) {
+    const source = plan || {};
+    return {
+      screens: Array.isArray(source.screens) ? source.screens : [],
+      deletions: Array.isArray(source.deletions) ? source.deletions : [],
+      warnings: Array.isArray(source.warnings) ? source.warnings : [],
+    };
+  }
+
+  function planSummary(plan) {
+    const counts = { new: 0, changed: 0, unchanged: 0 };
+    for (const screen of plan.screens) {
+      if (counts[screen.status] !== undefined) counts[screen.status]++;
+    }
+    const parts = [counts.new + ' new', counts.changed + ' changed', counts.unchanged + ' unchanged'];
+    if (plan.deletions.length > 0) parts.push(plan.deletions.length + ' to remove');
+    return 'Plan: ' + parts.join(' · ');
+  }
+
+  function showPlan(plan) {
+    ui.planText.textContent = planSummary(plan);
+    ui.planText.hidden = false;
+  }
+
+  function askToRemoveScreens(names) {
+    return new Promise(resolve => {
+      ui.deletionList.replaceChildren(...names.map(name => element('li', '', name)));
+      ui.confirmCard.hidden = false;
+      const finish = answer => {
+        ui.confirmCard.hidden = true;
+        ui.continueRemoveButton.onclick = null;
+        ui.cancelRemoveButton.onclick = null;
+        resolve(answer);
+      };
+      ui.continueRemoveButton.onclick = () => finish(true);
+      ui.cancelRemoveButton.onclick = () => finish(false);
+      ui.continueRemoveButton.focus();
+    });
+  }
+
+  function reportRows(list) {
+    if (!Array.isArray(list)) return [];
+    return list.filter(item => item && (item.message || typeof item === 'string')).map(item => {
+      if (typeof item === 'string') return { message: item, nodeId: null };
+      const message = item.nodeName && String(item.message).indexOf(item.nodeName) < 0
+        ? item.nodeName + ': ' + item.message
+        : String(item.message);
+      return { message, nodeId: item.nodeId || null };
+    });
+  }
+
+  function renderResult(result) {
+    hideProgress();
+    ui.resultSection.hidden = false;
+    ui.resultTitle.textContent = result.title;
+    ui.resultTitle.className = 'result-title ' + (result.good ? 'good' : 'bad');
+    ui.resultBody.replaceChildren();
+    for (const line of result.lines || []) ui.resultBody.append(element('div', 'result-line', line));
+    const groups = result.groups || {};
+    const container = element('div', 'check-list');
+    for (const group of SEVERITY_GROUPS) {
+      const rows = groups[group[0]] || [];
+      if (rows.length === 0) continue;
+      const details = element('details');
+      details.open = group[0] !== 'info' || rows.length <= 5;
+      details.append(element('summary', '', group[1] + ' (' + rows.length + ')'));
+      for (const row of rows) details.append(makeRowElement(group[0], row.message, row.nodeId ? [row.nodeId] : [], null));
+      container.append(details);
+    }
+    if (container.childElementCount > 0) ui.resultBody.append(container);
+  }
+
+  function failureResult(title, message, warnings) {
+    renderResult({
+      title,
+      good: false,
+      groups: { error: [{ message, nodeId: null }], warning: warnings || [] },
+    });
+  }
+
+  function describeFlowError(error) {
+    if (error instanceof BridgeError) {
+      if (error.kind === 'pairing') {
+        returnToPairing();
+        return 'Unity asked to pair again. Paste a fresh code from ' + PAIR_MENU_TEXT + ', then export again.';
+      }
+      if (error.kind === 'unreachable') {
+        setConnection('offline');
+        scheduleRetry(RETRY_OFFLINE_MS);
+        return 'Lost the connection to Unity. Make sure the project is open in Unity, or save an export file instead.';
+      }
+      if (error.status === 409) return error.message + ' Try again in a moment.';
+    }
+    return error.message || String(error);
+  }
+
+  async function uploadPictures(images, renders, scale, warnings) {
+    const items = images.map(hash => ({ kind: 'image', key: hash })).concat(renders.map(id => ({ kind: 'render', key: id })));
+    for (let index = 0; index < items.length; index++) {
+      const item = items[index];
+      setProgress('Sending pictures to Unity: ' + (index + 1) + ' of ' + items.length, index / items.length);
+      let bytes = null;
+      try {
+        const reply = item.kind === 'image'
+          ? await callPlugin('imageBytes', { hash: item.key })
+          : await callPlugin('renderBytes', { nodeId: item.key, scale });
+        bytes = reply.bytes;
+      } catch (error) {
+        warnings.push({ message: 'Couldn\'t make a picture of this layer: ' + error.message, nodeId: item.kind === 'render' ? item.key : null });
+        continue;
+      }
+      if (!bytes) {
+        warnings.push({ message: 'An image Unity asked for isn\'t in this Figma file anymore (' + item.key + ').', nodeId: null });
+        continue;
+      }
+      const path = item.kind === 'image' ? '/image?hash=' + encodeURIComponent(item.key) : '/render?id=' + encodeURIComponent(item.key);
+      try {
+        await bridgeRequest(path, {
+          method: 'POST',
+          body: bytes,
+          contentType: item.kind === 'image' ? 'application/octet-stream' : 'image/png',
+          timeout: TIMEOUTS.upload,
+        });
+      } catch (error) {
+        if (!(error instanceof BridgeError) || error.kind !== 'http') throw error;
+        warnings.push({ message: 'Unity didn\'t take a picture: ' + error.message, nodeId: item.kind === 'render' ? item.key : null });
+      }
+    }
+    if (items.length > 0) setProgress('Sent ' + plural(items.length, 'picture') + ' to Unity.', 1);
+  }
+
+  async function readExport(purpose) {
+    setProgress('Reading the design…');
+    const build = await callPlugin('buildExport', { purpose });
+    applyPreflight(build.preflight, true);
+    return build;
+  }
+
+  async function exportToUnity() {
+    if (state.busy) return;
+    setBusy(true);
+    clearResult();
+    const warnings = [];
+    try {
+      setProgress('Checking Unity…');
+      if (!(await connect())) {
+        failureResult('Not exported', 'Unity isn\'t ready. ' + (ui.statusDetail.textContent || ui.statusText.textContent));
+        return;
+      }
+      const build = await readExport('unity');
+      if (build.blocked) {
+        failureResult('Not exported', 'Fix the errors in the Checks list first.');
+        notify('Export to Unity stopped: fix the errors first.', true);
+        return;
+      }
+      setProgress('Sending the layout of ' + plural(build.screenNames.length, 'screen') + ' to Unity…');
+      const answer = (await bridgeRequest('/document', {
+        method: 'POST',
+        body: build.json,
+        contentType: 'application/json',
+        timeout: TIMEOUTS.document,
+      })).body;
+      const plan = normalizePlan(answer.plan);
+      const scale = Number(answer.scale) > 0 ? Number(answer.scale) : 1;
+      callPlugin('storageSet', { key: 'renderScale', value: scale }).catch(() => {});
+      showPlan(plan);
+      if (plan.deletions.length > 0) {
+        setProgress('Waiting for your answer…');
+        const proceed = await askToRemoveScreens(plan.deletions);
+        if (!proceed) {
+          renderResult({ title: 'Export cancelled', good: false, lines: ['Nothing was changed in Unity.'] });
+          return;
+        }
+      }
+      showPlan(plan);
+      await uploadPictures(answer.images || [], answer.renders || [], scale, warnings);
+      startTimedProgress('Building the UI in Unity. This can take a few minutes…');
+      const commit = await bridgeRequest('/commit', { method: 'POST', timeout: TIMEOUTS.commit, keepErrorBody: true });
+      stopProgressTimer();
+      showCommitResult(commit, plan, build, warnings);
+    } catch (error) {
+      const message = describeFlowError(error);
+      failureResult('Export to Unity failed', message, warnings);
+      notify('Export to Unity failed: ' + message, true);
+    } finally {
+      stopProgressTimer();
+      ui.confirmCard.hidden = true;
+      setBusy(false);
+    }
+  }
+
+  function showCommitResult(commit, plan, build, warnings) {
+    const body = commit.body || {};
+    const report = body.report || {};
+    const succeeded = commit.ok && body.ok !== false;
+    const errors = reportRows(report.errors);
+    if (!succeeded && errors.length === 0) errors.push({ message: body.error || 'Unity couldn\'t build the UI.', nodeId: null });
+    const allWarnings = reportRows(plan.warnings).concat(reportRows(report.warnings), warnings, reportRows(build.warnings));
+    const screens = Array.isArray(body.screens) ? body.screens : [];
+    const lines = [planSummary(plan)];
+    if (screens.length > 0) lines.push('Screens: ' + screens.join(', '));
+    renderResult({
+      title: succeeded ? 'Unity built ' + plural(screens.length, 'screen') : 'Unity couldn\'t build the UI',
+      good: succeeded,
+      lines,
+      groups: { error: errors, warning: allWarnings, info: reportRows(report.info) },
+    });
+    if (succeeded) notify('Exported ' + plural(screens.length, 'screen') + ' to Unity' + (allWarnings.length ? ' with ' + plural(allWarnings.length, 'warning') : ''));
+    else notify('Export to Unity failed: ' + errors[0].message, true);
+  }
+
+  function downloadBlob(blob, fileName) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  }
+
+  async function saveExportFile() {
+    if (state.busy) return;
+    setBusy(true);
+    clearResult();
+    const warnings = [];
+    try {
+      const build = await readExport('bundle');
+      if (build.blocked) {
+        failureResult('Not saved', 'Fix the errors in the Checks list first.');
+        notify('Export file not saved: fix the errors first.', true);
+        return;
+      }
+      const storedScale = await callPlugin('storageGet', { key: 'renderScale' }).catch(() => null);
+      const scale = Number(storedScale) > 0 ? Number(storedScale) : 1;
+      const parts = ['{"bundleVersion":1,"document":', build.json, ',"images":{'];
+      const total = build.images.length + build.renders.length;
+      let done = 0;
+      let first = true;
+      for (const hash of build.images) {
+        setProgress('Packing pictures: ' + (done + 1) + ' of ' + total, done / Math.max(1, total));
+        done++;
+        const reply = await callPlugin('imageBytes', { hash }).catch(error => ({ bytes: null, error }));
+        if (!reply.bytes) {
+          warnings.push({ message: 'An image is missing from this Figma file (' + hash + ').', nodeId: null });
+          continue;
+        }
+        parts.push((first ? '' : ',') + JSON.stringify(hash) + ':"' + bytesToBase64(reply.bytes) + '"');
+        first = false;
+      }
+      parts.push('},"renders":{');
+      first = true;
+      for (const nodeId of build.renders) {
+        setProgress('Packing pictures: ' + (done + 1) + ' of ' + total, done / Math.max(1, total));
+        done++;
+        try {
+          const reply = await callPlugin('renderBytes', { nodeId, scale });
+          parts.push((first ? '' : ',') + JSON.stringify(nodeId) + ':"' + bytesToBase64(reply.bytes) + '"');
+          first = false;
+        } catch (error) {
+          warnings.push({ message: 'Couldn\'t make a picture of this layer: ' + error.message, nodeId });
+        }
+      }
+      parts.push('},"renderScale":' + JSON.stringify(scale) + '}');
+      const fileName = bundleFileName(build.pageName);
+      downloadBlob(new Blob(parts, { type: 'application/json' }), fileName);
+      renderResult({
+        title: 'Saved ' + fileName,
+        good: true,
+        lines: [
+          plural(build.screenNames.length, 'screen') + ', ' + plural(build.images.length, 'image') + ', ' + plural(build.renders.length, 'picture') + '.',
+          'In Unity, use ' + IMPORT_MENU_TEXT + ' and pick this file.',
+        ],
+        groups: { warning: warnings.concat(reportRows(build.warnings)) },
+      });
+      notify('Saved ' + fileName);
+    } catch (error) {
+      const message = error.message || String(error);
+      failureResult('Export file not saved', message, warnings);
+      notify('Saving the export file failed: ' + message, true);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function observeSize() {
+    const app = document.getElementById('app');
+    let frame = 0;
+    const send = () => {
+      frame = 0;
+      const height = Math.ceil(app.getBoundingClientRect().height);
+      if (Math.abs(height - state.lastHeight) < 2) return;
+      state.lastHeight = height;
+      callPlugin('resize', { height }).catch(() => {});
+    };
+    new ResizeObserver(() => {
+      if (!frame) frame = requestAnimationFrame(send);
+    }).observe(app);
+  }
+
+  function handlePluginPush(message) {
+    if (message.type === 'pages') {
+      applyPages(message.pages, message.currentPageId, message.byPlugin);
+    } else if (message.type === 'scope') {
+      if (message.scope) {
+        applyScope(message.scope);
+        schedulePreflight(150);
+      }
+    } else if (message.type === 'selection') {
+      applySelection(message);
+      if (message.recheck) schedulePreflight(700);
+    } else if (message.type === 'layerInfo') {
+      applyLayerInfo(message.layer);
+    } else if (message.type === 'progress') {
+      if (state.busy) setProgress(message.text);
+    }
+  }
+
+  window.addEventListener('message', event => {
+    const message = event.data && event.data.pluginMessage;
+    if (!message) return;
+    if (message.type === 'reply') {
+      const pending = pendingRequests.get(message.requestId);
+      if (!pending) return;
+      pendingRequests.delete(message.requestId);
+      if (message.ok) pending.resolve(message.result);
+      else pending.reject(new Error(message.error || 'Something went wrong in the plugin.'));
+      return;
+    }
+    handlePluginPush(message);
+  });
+
+  function wireEvents() {
+    ui.roleSelect.replaceChildren(...ROLE_OPTIONS.map(option => {
+      const node = element('option', '', option[1]);
+      node.value = option[0];
+      return node;
+    }));
+    ui.projectSelect.addEventListener('change', () => {
+      const port = Number(ui.projectSelect.value);
+      if (!port || port === state.port) return;
+      state.port = port;
+      state.savedPort = port;
+      state.pairingProject = null;
+      state.pairingCode = null;
+      state.sentUnityInfo = null;
+      callPlugin('storageSet', { key: 'bridgePort', value: port }).catch(() => {});
+      connect();
+    });
+    ui.pageSelect.addEventListener('change', () => {
+      state.userPickedPage = true;
+      changeExportPage(ui.pageSelect.value);
+    });
+    ui.retryButton.addEventListener('click', () => {
+      setConnection('checking');
+      connect();
+    });
+    ui.recheckButton.addEventListener('click', () => {
+      connect();
+      schedulePreflight(0);
+    });
+    ui.pairButton.addEventListener('click', submitPairingCode);
+    ui.pairingInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') submitPairingCode();
+    });
+    ui.exportButton.addEventListener('click', exportToUnity);
+    ui.bundleButton.addEventListener('click', saveExportFile);
+    ui.roleSelect.addEventListener('change', () => {
+      renderLayerMeta();
+      queueSettingsSave(0);
+    });
+    ui.autoSizeInput.addEventListener('change', () => queueSettingsSave(0));
+    for (const input of [ui.bindingInput, ui.localizationInput, ui.insetLeft, ui.insetTop, ui.insetRight, ui.insetBottom]) {
+      input.addEventListener('input', () => queueSettingsSave(450));
+      input.addEventListener('blur', () => {
+        if (state.pendingSave) flushSettingsSave();
+      });
+    }
+  }
+
+  async function start() {
+    wireEvents();
+    observeSize();
+    renderConnection();
+    renderChecks();
+    try {
+      const init = await callPlugin('init');
+      state.pluginVersion = init.pluginVersion;
+      state.exportPageId = init.scope.pageId;
+      applyPages(init.pages, init.currentPageId, true);
+      applyScope(init.scope);
+      applySelection(init.selection);
+    } catch (error) {
+      ui.scopeText.textContent = 'The plugin couldn\'t start: ' + error.message;
+      return;
+    }
+    schedulePreflight(0);
+    connect();
+  }
+
+  start();
+</script>
+</body>
+</html>

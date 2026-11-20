@@ -1,0 +1,22 @@
+{
+  "name": "Export to Unity",
+  "id": "figma-to-unity-export",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": [
+    "figma"
+  ],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": [
+      "none"
+    ],
+    "devAllowedDomains": [
+      "http://localhost:37264",
+      "http://localhost:37265",
+      "http://localhost:37266"
+    ],
+    "reasoning": "Sends the exported screens to the Unity Editor running on this computer."
+  }
+}
